@@ -1,0 +1,138 @@
+def msft():
+	ticker = 'MSFT'
+
+	def securityName():
+		from requests_html import HTML, HTMLSession
+		session = HTMLSession()
+		r = session.get('https://finance.yahoo.com/quote/' + ticker + '/history?p=' + ticker)
+		global security
+		security = r.html.find('h1', first=True).text
+
+	def securityPrice():
+		import requests
+		from bs4 import BeautifulSoup
+		url = 'https://finance.yahoo.com/quote/'+ ticker + '?p=' + ticker + '&.tsrc=fin-srch'
+		response = requests.get(url)
+		soup = BeautifulSoup(response.text, 'lxml')
+		global price
+		price = soup.find_all('div', {'class':'My(6px) Pos(r) smartphone_Mt(6px)'})[0].find('span').text
+
+	def historicalData():
+		import requests
+		from bs4 import BeautifulSoup
+		url = 'https://finance.yahoo.com/quote/' + ticker + '/history?p=' + ticker
+		response = requests.get(url)
+		soup = BeautifulSoup(response.text, 'lxml')
+		global date, openprice, highprice, lowprice, closeprice, adjclose
+		date = soup.find_all('td', {'class':'Py(10px) Ta(start) Pend(10px)'})[0].text
+		openprice = soup.find_all('td', {'class':'Py(10px) Pstart(10px)'})[0].text
+		openprice = float(openprice)
+		highprice = soup.find_all('td', {'class':'Py(10px) Pstart(10px)'})[1].text
+		highprice = float(highprice)
+		lowprice = soup.find_all('td', {'class':'Py(10px) Pstart(10px)'})[2].text
+		lowprice = float(lowprice)
+		closeprice = soup.find_all('td', {'class':'Py(10px) Pstart(10px)'})[3].text
+		closeprice = float(closeprice)
+		adjclose = soup.find_all('td', {'class':'Py(10px) Pstart(10px)'})[4].text
+		adjclose = float(adjclose)
+
+	securityName()
+	securityPrice()
+	historicalData()
+
+
+	# while True:
+	# 	print('$' + securityPrice())
+
+def aapl():
+	ticker = 'AAPL'
+
+	def securityName():
+		from requests_html import HTML, HTMLSession
+		session = HTMLSession()
+		r = session.get('https://finance.yahoo.com/quote/' + ticker + '/history?p=' + ticker)
+		global security
+		security = r.html.find('h1', first=True).text
+
+	def securityPrice():
+		import requests
+		from bs4 import BeautifulSoup
+		url = 'https://finance.yahoo.com/quote/'+ ticker + '?p=' + ticker + '&.tsrc=fin-srch'
+		response = requests.get(url)
+		soup = BeautifulSoup(response.text, 'lxml')
+		global price
+		price = soup.find_all('div', {'class':'My(6px) Pos(r) smartphone_Mt(6px)'})[0].find('span').text
+
+	def historicalData():
+		import requests
+		from bs4 import BeautifulSoup
+		url = 'https://finance.yahoo.com/quote/' + ticker + '/history?p=' + ticker
+		response = requests.get(url)
+		soup = BeautifulSoup(response.text, 'lxml')
+		global date, openprice, highprice, lowprice, closeprice, adjclose
+		date = soup.find_all('td', {'class':'Py(10px) Ta(start) Pend(10px)'})[0].text
+		openprice = soup.find_all('td', {'class':'Py(10px) Pstart(10px)'})[0].text
+		openprice = float(openprice)
+		highprice = soup.find_all('td', {'class':'Py(10px) Pstart(10px)'})[1].text
+		highprice = float(highprice)
+		lowprice = soup.find_all('td', {'class':'Py(10px) Pstart(10px)'})[2].text
+		lowprice = float(lowprice)
+		closeprice = soup.find_all('td', {'class':'Py(10px) Pstart(10px)'})[3].text
+		closeprice = float(closeprice)
+		adjclose = soup.find_all('td', {'class':'Py(10px) Pstart(10px)'})[4].text
+		adjclose = float(adjclose)
+
+	securityName()
+	securityPrice()
+	historicalData()
+
+	# while True:
+	# 	print('$' + securityPrice())
+
+
+########## To write into spreadsheet##################
+import xlsxwriter
+dataWorkbook = xlsxwriter.Workbook("securityData.xlsx")
+msft()
+dataSheet1 = dataWorkbook.add_worksheet('MSFT')
+dataSheet1.set_column(0, 1, 28)
+dataSheet1.set_column(1, 1, 11)
+dataSheet1.set_column(2, 1, 12)
+dataSheet1.set_column(3, 1, 12)
+dataSheet1.set_column(4, 1, 12)
+dataSheet1.set_column(5, 1, 12)
+dataSheet1.write("A1", 'Security')
+dataSheet1.write("A2", security)
+dataSheet1.write("B1", 'Date')
+dataSheet1.write("B2", date)
+dataSheet1.write("C1", 'Open Price')
+dataSheet1.write("C2", openprice)
+dataSheet1.write("D1", 'High Price')
+dataSheet1.write("D2", highprice)
+dataSheet1.write("E1", 'Low Price')
+dataSheet1.write("E2", lowprice)
+dataSheet1.write("F1", 'Close Price')
+dataSheet1.write("F2", closeprice)
+
+aapl()
+dataSheet2 = dataWorkbook.add_worksheet('AAPL')
+dataSheet2.set_column(0, 1, 28)
+dataSheet2.set_column(1, 1, 11)
+dataSheet2.set_column(2, 1, 12)
+dataSheet2.set_column(3, 1, 12)
+dataSheet2.set_column(4, 1, 12)
+dataSheet2.set_column(5, 1, 12)
+dataSheet2.write("A1", 'Security')
+dataSheet2.write("A2", security)
+dataSheet2.write("B1", 'Date')
+dataSheet2.write("B2", date)
+dataSheet2.write("C1", 'Open Price')
+dataSheet2.write("C2", openprice)
+dataSheet2.write("D1", 'High Price')
+dataSheet2.write("D2", highprice)
+dataSheet2.write("E1", 'Low Price')
+dataSheet2.write("E2", lowprice)
+dataSheet2.write("F1", 'Close Price')
+dataSheet2.write("F2", closeprice)
+
+dataWorkbook.close()
